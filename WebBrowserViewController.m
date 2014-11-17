@@ -8,13 +8,19 @@
 
 #import "WebBrowserViewController.h"
 
-@interface WebBrowserViewController () <UIWebViewDelegate, UITextFieldDelegate>
+@interface WebBrowserViewController () <UIWebViewDelegate, UITextFieldDelegate, UIWebViewDelegate>
 
 @property (nonatomic, strong) UIWebView *webview;
 @property (nonatomic, strong) UITextField *textField;
+@property(nonatomic, strong) UIButton *backButton;
+@property(nonatomic, strong) UIButton *forwardButton;
+@property(nonatomic, strong) UIButton *stopButton;
+@property(nonatomic, strong) UIButton *refreshButton;
 
 
 @end
+
+
 
 @implementation WebBrowserViewController
 
@@ -23,6 +29,8 @@
     // Do any additional setup after loading the view.
     self.edgesForExtendedLayout = UIRectEdgeNone;
 }
+
+#pragma mark - UIViewController
 
 -(void) loadView
 
@@ -34,7 +42,10 @@
     //Allocating & initializing  the properties
     self.webview = [UIWebView new];
     self.textField = [UITextField new];
-
+   /* self.backButton = [UIButton new];
+    self.forwardButton = [UIButton new];
+    self.stopButton = [UIButton new];
+    self.refreshButton = [UIButton new];*/
     
     
 
@@ -50,13 +61,39 @@
     self.textField.placeholder = NSLocalizedString(@"Website URL", @"Placeholder text for web browser URL field");
     self.textField.backgroundColor = self.textField.backgroundColor = [UIColor colorWithWhite:220/255.0f alpha:1];
     
+    self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
     
+    [self.backButton setEnabled:NO];
+    [self.stopButton setEnabled:NO];
+    [self.forwardButton setEnabled:NO];
+    [self.refreshButton setEnabled:NO];
     
+    [self.backButton setTitle:NSLocalizedString(@"Back", @"Back command") forState:(UIControlStateNormal)];
+    [self.backButton addTarget:self.webview action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
-    //Adding the sub-views
-    [mainView addSubview:self.webview];
-    [mainView addSubview:self.textField];
+    [self.stopButton setTitle:NSLocalizedString(@"Stop", @"Stop command") forState: (UIControlStateNormal)];
+    [self.stopButton addTarget:self.webview action:@selector(stopLoading) forControlEvents:UIControlEventTouchUpInside];
     
+    [self.refreshButton setTitle: NSLocalizedString(@"Refresh", "Refresh comand") forState:UIControlStateNormal];
+    [self.refreshButton addTarget:self.webview action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.forwardButton setTitle:NSLocalizedString(@"Forward", @"Forward command") forState:UIControlStateNormal];
+    [self.forwardButton addTarget:self.webview action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
+    
+    // Adding the sub-views one by one
+   // [mainView addSubview:self.webview];
+  // [mainView addSubview:self.textField];
+    
+    //Adding the sub-views via a loop
+    for (UIView *viewToAdd in @[self.webview, self.textField, self.refreshButton, self.backButton, self.stopButton, self.forwardButton, self.webview, self.textField])
+        
+    {
+        [mainView addSubview:viewToAdd];
+    
+    }
     
     self.view = mainView;
     
@@ -75,28 +112,84 @@
     
     static const CGFloat itemHeight = 50;
     CGFloat width = CGRectGetWidth(self.view.bounds);
-    CGFloat browserHeight = CGRectGetHeight(self.view.bounds) - itemHeight;
+    CGFloat browserHeight = CGRectGetHeight(self.view.bounds) - itemHeight - itemHeight;
+
+    //calculating button's width
+    CGFloat buttonWidth1 = CGRectGetWidth(self.view.bounds)/4;
+    
+    /* Alternate way of calculating button's width
+     
+     CGFloat buttonWidth = CGRectGetMaxX(self.view.frame)/4;
+     NSLog(@"buttonWidth: %f", buttonWidth);
+     */
+    
+   
+    
     
     // Now, assign the frames
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webview.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
+    CGFloat currentButton = 0;
+    
+    for (UIButton *button in @[self.backButton, self.stopButton, self.refreshButton, self.forwardButton])
+        
+    {
+    
+        button.frame = CGRectMake(currentButton, CGRectGetMaxY(self.webview.frame), buttonWidth1, itemHeight);
+        currentButton += buttonWidth1;
+    
+    }
+    
+    
+    
     
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    
-    NSString *URLString = textField.text;
-    
+#pragma mark - TextFieldDelegate
+
+-(BOOL) textFieldShouldReturn:(UITextField *)tf
+{
+
+    [tf resignFirstResponder];
+    NSString *URLString = tf.text;
     NSURL *URL = [NSURL URLWithString:URLString];
     
-    if (URL) {
+    if (URL)
+    {
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    [self.webview loadRequest:request];
+    }
+    
+    if (!URL.scheme)
+        
+    {
+        
+
+        // NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",URLString]];
+        NSString *newURL = [@"http://" stringByAppendingString:URLString];
+        NSURL *URL = [NSURL URLWithString:newURL];
         NSURLRequest *request = [NSURLRequest requestWithURL:URL];
         [self.webview loadRequest:request];
+    
     }
+    
     
     return NO;
 }
 
+#pragma mark - UIWebViewDelegate
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    if (error.code != -999)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Error", @"Error")
+                                                        message:[error localizedDescription]
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLocalizedString(@"OK", nil)
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
 
 @end

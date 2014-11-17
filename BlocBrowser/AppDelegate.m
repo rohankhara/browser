@@ -18,11 +18,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    self.window = [[UIWindow new] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // self.window = [[UIWindow new] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [UIWindow new];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[WebBrowserViewController new]];
     [self.window makeKeyAndVisible];
+    self.window.frame = [[UIScreen mainScreen] bounds];
     return YES;
     
 }
