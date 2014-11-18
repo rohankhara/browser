@@ -16,6 +16,9 @@
 @property(nonatomic, strong) UIButton *forwardButton;
 @property(nonatomic, strong) UIButton *stopButton;
 @property(nonatomic, strong) UIButton *refreshButton;
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, assign) NSUInteger *frameCount;
+// @property (nonatomic, assign) BOOL isLoading;
 
 
 @end
@@ -28,6 +31,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    // [self.activityIndicator startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+    
 }
 
 #pragma mark - UIViewController
@@ -54,11 +61,11 @@
     self.textField.delegate = self;
     
     
-    self.textField.keyboardType = UIKeyboardTypeURL;
+    // self.textField.keyboardType = UIKeyboardTypeURL;
     self.textField.returnKeyType = UIReturnKeyDone;
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.textField.placeholder = NSLocalizedString(@"Website URL", @"Placeholder text for web browser URL field");
+    self.textField.placeholder = NSLocalizedString(@"Enter URL or your search query", @"Placeholder text for web browser URL field or google search box");
     self.textField.backgroundColor = self.textField.backgroundColor = [UIColor colorWithWhite:220/255.0f alpha:1];
     
     self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -88,7 +95,7 @@
   // [mainView addSubview:self.textField];
     
     //Adding the sub-views via a loop
-    for (UIView *viewToAdd in @[self.webview, self.textField, self.refreshButton, self.backButton, self.stopButton, self.forwardButton, self.webview, self.textField])
+    for (UIView *viewToAdd in @[self.webview, self.textField, self.refreshButton, self.backButton, self.stopButton, self.forwardButton])
         
     {
         [mainView addSubview:viewToAdd];
@@ -151,7 +158,22 @@
 {
 
     [tf resignFirstResponder];
-    NSString *URLString = tf.text;
+    NSMutableString *URLString = [tf.text mutableCopy];
+  
+    
+    NSRange chokeRange = [URLString rangeOfString:@" "];
+    
+    if (chokeRange.location != NSNotFound)
+        
+    {
+   NSString *modifiedURL = [URLString stringByReplacingOccurrencesOfString:@" " withString: @"+"];
+    NSString *newURL = [@"http://www.google.com/search?q=" stringByAppendingString:modifiedURL];
+    NSURL *URL = [NSURL URLWithString:newURL];
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+        NSLog(@"%@", request);
+    [self.webview loadRequest:request];
+    }
+    
     NSURL *URL = [NSURL URLWithString:URLString];
     
     if (URL)
@@ -159,6 +181,8 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
     [self.webview loadRequest:request];
     }
+    
+    
     
     if (!URL.scheme)
         
@@ -189,7 +213,64 @@
                                               cancelButtonTitle:NSLocalizedString(@"OK", nil)
                                               otherButtonTitles:nil];
         [alert show];
+        
+        [self updateButtonsAndTitle];
+        self.frameCount--;
     }
 }
+
+-(void) webViewDidFinishLoad:(UIWebView *)webView
+
+{
+    // self.isLoading = YES;
+    
+    [self updateButtonsAndTitle];
+    self.frameCount--;
+
+}
+
+-(void) webViewDidStartLoad:(UIWebView *)webView
+{
+   // self.isLoading = NO;
+    [self updateButtonsAndTitle];
+    self.frameCount++;
+
+}
+
+
+#pragma mark Miscellaneous
+
+-(void) updateButtonsAndTitle
+
+{
+    NSString *webPageTitle = [self.webview stringByEvaluatingJavaScriptFromString:@"document.title"];
+    
+    if (webPageTitle)
+    {
+        self.title = webPageTitle;
+    
+    }
+    
+    else
+    {
+    
+        self.title = self.webview.request.URL.absoluteString;
+    }
+    
+    self.backButton.enabled = [self.webview canGoBack];
+    self.forwardButton.enabled = [self.webview canGoForward];
+    self.stopButton.enabled = self.frameCount > 0;
+    self.refreshButton.enabled = self.frameCount == 0;
+    
+    
+    if (self.frameCount > 0) {
+        [self.activityIndicator startAnimating];
+    } else {
+        [self.activityIndicator stopAnimating];
+    }
+    
+}
+
+
 
 @end
