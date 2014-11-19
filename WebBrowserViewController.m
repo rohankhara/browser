@@ -168,7 +168,8 @@
     {
    NSString *modifiedURL = [URLString stringByReplacingOccurrencesOfString:@" " withString: @"+"];
     NSString *newURL = [@"http://www.google.com/search?q=" stringByAppendingString:modifiedURL];
-    NSURL *URL = [NSURL URLWithString:newURL];
+        // NSString *escapedURL = [newURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURL *URL = [NSURL URLWithString:escapedURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
         NSLog(@"%@", request);
     [self.webview loadRequest:request];
