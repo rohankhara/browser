@@ -79,16 +79,16 @@
     [self.refreshButton setEnabled:NO];
     
     [self.backButton setTitle:NSLocalizedString(@"Back", @"Back command") forState:(UIControlStateNormal)];
-    [self.backButton addTarget:self.webview action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+//    [self.backButton addTarget:self.webview action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     [self.stopButton setTitle:NSLocalizedString(@"Stop", @"Stop command") forState: (UIControlStateNormal)];
-    [self.stopButton addTarget:self.webview action:@selector(stopLoading) forControlEvents:UIControlEventTouchUpInside];
+  //  [self.stopButton addTarget:self.webview action:@selector(stopLoading) forControlEvents:UIControlEventTouchUpInside];
     
     [self.refreshButton setTitle: NSLocalizedString(@"Refresh", "Refresh comand") forState:UIControlStateNormal];
-    [self.refreshButton addTarget:self.webview action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
+    //[self.refreshButton addTarget:self.webview action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
     
     [self.forwardButton setTitle:NSLocalizedString(@"Forward", @"Forward command") forState:UIControlStateNormal];
-    [self.forwardButton addTarget:self.webview action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
+    // [self.forwardButton addTarget:self.webview action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
     
     // Adding the sub-views one by one
    // [mainView addSubview:self.webview];
@@ -103,6 +103,9 @@
     }
     
     self.view = mainView;
+    
+    
+    
     
    /*  NSString *urlString = @"http://www.quikr.com";
     NSURL *url = [NSURL URLWithString:urlString];
@@ -169,7 +172,7 @@
    NSString *modifiedURL = [URLString stringByReplacingOccurrencesOfString:@" " withString: @"+"];
     NSString *newURL = [@"http://www.google.com/search?q=" stringByAppendingString:modifiedURL];
         // NSString *escapedURL = [newURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL *URL = [NSURL URLWithString:escapedURL];
+    NSURL *URL = [NSURL URLWithString:newURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
         NSLog(@"%@", request);
     [self.webview loadRequest:request];
@@ -272,6 +275,33 @@
     
 }
 
+-(void) resetWebView
+
+{
+
+    [self.webview removeFromSuperview];
+    UIWebView *newWebView = [[UIWebView alloc]init];
+    newWebView.delegate = self;
+    [self.view addSubview:newWebView];
+     
+     self.webview = newWebView;
+     [self addButtonTargets];
+     self.textField.text = nil;
+     [self updateButtonsAndTitle];
+
+
+}
+
+- (void) addButtonTargets {
+    for (UIButton *button in @[self.backButton, self.forwardButton, self.stopButton, self.refreshButton]) {
+        [button removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    [self.backButton addTarget:self.webview action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [self.forwardButton addTarget:self.webview action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
+    [self.stopButton addTarget:self.webview action:@selector(stopLoading) forControlEvents:UIControlEventTouchUpInside];
+    [self.refreshButton addTarget:self.webview action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
+}
 
 
 @end

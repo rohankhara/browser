@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface WebBrowserViewController : UIViewController
+-(void) resetWebView;
 
 @end
