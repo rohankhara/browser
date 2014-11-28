@@ -26,7 +26,7 @@
 {
 
 
-    self= [super init];
+    self = [super init];
      
      if (self)
     
@@ -59,7 +59,8 @@
             
             label.textAlignment = NSTextAlignmentCenter;
             label.font = [UIFont systemFontOfSize:10];
-            label.text = titleForThisLabel;
+            // label.text = titleForThisLabel;
+            label.text = currentTitle;
             label.backgroundColor = colorForThisLabel;
             label.textColor = [UIColor whiteColor];
             
@@ -139,7 +140,8 @@ for (UILabel *thisLabel in self.labels)
 
 #pragma mark - Touch Handling
 
--(UILabel *) labelFromTouches: (NSSet *) touches withEvent: (UIEvent *) event
+- (UILabel *) labelFromTouches: (NSSet *) touches withEvent: (UIEvent *) event
+
 
 {
 

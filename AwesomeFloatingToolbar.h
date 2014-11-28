@@ -18,7 +18,6 @@
 @end
 
 
-
 @interface AwesomeFloatingToolbar : UIView
 
 - (instancetype) initWithFourTitles: (NSArray *) titles;
