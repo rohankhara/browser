@@ -14,6 +14,9 @@
 @property (nonatomic, strong) NSArray *colors;
 @property (nonatomic, strong) NSArray *labels;
 @property (nonatomic, weak) UILabel *currentLabel;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 
 @end
 
@@ -60,7 +63,7 @@
             label.textAlignment = NSTextAlignmentCenter;
             label.font = [UIFont systemFontOfSize:10];
             // label.text = titleForThisLabel;
-            label.text = currentTitle;
+            label.text = titleForThisLabel;
             label.backgroundColor = colorForThisLabel;
             label.textColor = [UIColor whiteColor];
             
@@ -77,7 +80,14 @@
                 [self addSubview:thisLabel];
             }
         
+        self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
+        [self addGestureRecognizer:self.tapGesture];
         
+        self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panFired:)];
+        [self addGestureRecognizer:self.panGesture];
+        
+        self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchFired:)];
+        [self addGestureRecognizer:self.pinchGesture];
         
         }
     
@@ -152,7 +162,99 @@ for (UILabel *thisLabel in self.labels)
 
 }
 
--(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+-(void) tapFired:(UITapGestureRecognizer *) recognizer
+
+{
+    if (recognizer.state == UIGestureRecognizerStateRecognized)
+        
+    {
+        CGPoint location = [recognizer locationInView: self];
+        UIView *tappedView = [self hitTest:location withEvent:nil];
+    
+        
+        if ([self.labels containsObject:tappedView])
+            
+        {
+            
+            if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+                
+            {
+                
+                
+                [self.delegate floatingToolbar:self didSelectButtonWithTitle:((UILabel *) tappedView).text];
+                
+            }
+            
+            
+        }
+    }
+
+}
+
+
+
+-(void) panFired: (UIPanGestureRecognizer *) recognizer
+
+{
+
+
+    if (recognizer.state == UIGestureRecognizerStateChanged)
+        
+    {
+        CGPoint translation = [recognizer translationInView:self];
+        
+        NSLog(@"New translation: %@", NSStringFromCGPoint(translation));
+        
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar: didTryToPanWithOffset:)])
+            
+        {
+            [self.delegate floatingToolbar:self didTryToPanWithOffset:translation];
+        
+        }
+        
+        [recognizer setTranslation:CGPointZero inView:self];
+    
+    
+    }
+    
+}
+
+
+-(void) pinchFired: (UIPinchGestureRecognizer *) recognizer
+
+
+{
+
+    
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan)
+    
+    {
+    
+        recognizer.scale = self.transform.a;
+        CGRect newFrame = self.frame;
+        
+    
+    }
+    
+        
+        
+    if (recognizer.state == UIGestureRecognizerStateChanged)
+    
+    {
+        
+       
+        self.transform = CGAffineTransformScale(self.transform, self.pinchGesture.scale, self.pinchGesture.scale);
+        
+        
+        
+    }
+
+
+}
+
+
+/* -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 
 {
 
@@ -214,7 +316,7 @@ for (UILabel *thisLabel in self.labels)
     self.currentLabel.alpha = 1;
     self.currentLabel = nil;
 }
-
+*/
 
 -(void) setEnabled: (BOOL) enabled forButtonWithTitle: (NSString *) title
 
