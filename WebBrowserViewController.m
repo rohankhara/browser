@@ -44,6 +44,7 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     // [self.activityIndicator startAnimating];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
+
     
 }
 
@@ -93,7 +94,7 @@
      [self.refreshButton setEnabled:NO];
      
      [self.backButton setTitle:NSLocalizedString(@"Back", @"Back command") forState:(UIControlStateNormal)];
-     //    [self.backButton addTarget:self.webview action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+     [self.backButton addTarget:self.webview action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
      
      [self.stopButton setTitle:NSLocalizedString(@"Stop", @"Stop command") forState: (UIControlStateNormal)];
      //  [self.stopButton addTarget:self.webview action:@selector(stopLoading) forControlEvents:UIControlEventTouchUpInside];
@@ -121,7 +122,7 @@
     self.view = mainView;
     
     
-    
+    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
     
     /*  NSString *urlString = @"http://www.quikr.com";
      NSURL *url = [NSURL URLWithString:urlString];
@@ -170,7 +171,7 @@
      } */
     
     
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+    
     
 }
 
@@ -357,29 +358,43 @@
     
 }
 
-- (void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset
+
+-(void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPanWithOffset:(CGPoint)offset
 
 {
     
     CGPoint startingPoint = toolbar.frame.origin;
-    
     CGPoint newPoint = CGPointMake(startingPoint.x + offset.x, startingPoint.y + offset.y);
     
     CGRect potentialNewFrame = CGRectMake(newPoint.x, newPoint.y, CGRectGetWidth(toolbar.frame), CGRectGetHeight(toolbar.frame));
     
+    
     if (CGRectContainsRect(self.view.bounds, potentialNewFrame))
         
     {
-    
         toolbar.frame = potentialNewFrame;
+        
     }
     
 }
+    
+    
 
+-(void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat) scale
+
+{
+    
+    
+    CGRect potentialNewFrame = CGRectMake(toolbar.frame.origin.x, toolbar.frame.origin.y,toolbar.frame.size.width * scale, toolbar.frame.size.height * scale);
+
+    if (CGRectContainsRect(self.view.bounds, potentialNewFrame))
+    {
+        toolbar.frame = potentialNewFrame;
+    }
     
     
     
-    
+}
 
 
 -(void) resetWebView

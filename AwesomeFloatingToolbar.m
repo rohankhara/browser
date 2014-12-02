@@ -13,10 +13,13 @@
 @property (nonatomic, strong) NSArray *currentTitles;
 @property (nonatomic, strong) NSArray *colors;
 @property (nonatomic, strong) NSArray *labels;
+@property (nonatomic, strong) NSArray *buttons;
 @property (nonatomic, weak) UILabel *currentLabel;
+@property(nonatomic, weak) UIButton *currentButton;
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
 @end
 
@@ -45,9 +48,97 @@
     
         NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
         
+        
+        
+        //Make the 4 buttons
+        
+  /* NSMutableArray *buttonsArray = [NSMutableArray new];
+   
+   for (NSString *currentTitle in self.currentTitles)
+            
+        {
+        
+            UIButton *button = [UIButton new];
+            [button setEnabled:NO];
+            
+            NSUInteger currentTitleIndex = [self.currentTitles indexOfObject: currentTitle];
+            NSString *titleForThisButton = [self.currentTitles objectAtIndex:currentTitleIndex];
+            UIColor *colorForThisButton = [self.colors objectAtIndex:currentTitleIndex];
+            
+            [button setTitle:titleForThisButton forState:UIControlStateNormal];
+             button.backgroundColor = colorForThisButton;
+            [buttonsArray addObject:button];
+            
+        }
+        
+        self.buttons = buttonsArray;
+        for (UIButton *thisButton in self.buttons)
+            
+        {
+            
+            if ([thisButton.titleLabel isEqual:@"Back"] && thisButton.isSelected)
+            {
+                
+                if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+                    
+                {
+                    [self.delegate floatingToolbar:self didSelectButtonWithTitle:@"Back"];
+                    
+                }
+                
+            }
+            
+            
+            
+            if ([thisButton.titleLabel isEqual:@"Refresh"] && thisButton.isSelected)
+            {
+                
+                if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+                    
+                {
+                    [self.delegate floatingToolbar:self didSelectButtonWithTitle:@"Refresh"];
+                    
+                }
+                
+            }
+
+            
+            
+            if ([thisButton.titleLabel isEqual:@"Forward"] && thisButton.isSelected)
+            {
+                
+                if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+                    
+                {
+                    [self.delegate floatingToolbar:self didSelectButtonWithTitle:@"Forward"];
+                    
+                }
+                
+            }
+
+            
+            if ([thisButton.titleLabel isEqual:@"Stop"] && thisButton.isSelected)
+            {
+                
+                if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+                    
+                {
+                    [self.delegate floatingToolbar:self didSelectButtonWithTitle:@"Stop"];
+                    
+                }
+                
+            }
+            
+            [self addSubview:thisButton];
+        } */
+        
+        
+        
+        
+        
         //Make the 4 labels
         
-        for (NSString *currentTitle in self.currentTitles)
+         for (NSString *currentTitle in self.currentTitles)
             
         {
         
@@ -79,15 +170,22 @@
         
                 [self addSubview:thisLabel];
             }
+            cd
+            
         
+       
         self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
         [self addGestureRecognizer:self.tapGesture];
+        
         
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panFired:)];
         [self addGestureRecognizer:self.panGesture];
         
         self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchFired:)];
         [self addGestureRecognizer:self.pinchGesture];
+        
+        self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
+        [self addGestureRecognizer:self.longPressGesture];
         
         }
     
@@ -99,58 +197,110 @@
 -(void) layoutSubviews
 
 {
-
-for (UILabel *thisLabel in self.labels)
     
-{
-
-    NSUInteger currentLabelIndex = [self.labels indexOfObject:thisLabel];
-    CGFloat labelHeight = CGRectGetHeight (self.bounds) / 2;
-    CGFloat labelWidth = CGRectGetWidth(self.bounds) / 2;
-    CGFloat labelX = 0;
-    CGFloat labelY = 0;
     
-    if (currentLabelIndex < 2)
+/*
+ for (UIButton *thisButton in self.buttons)
         
+    {
+        
+        NSUInteger currentButtonIndex = [self.buttons indexOfObject:thisButton];
+        CGFloat buttonHeight = CGRectGetHeight (self.bounds) / 2;
+        CGFloat buttonWidth = CGRectGetWidth(self.bounds) / 2;
+        CGFloat buttonX = 0;
+        CGFloat buttonY = 0;
+        
+        if (currentButtonIndex < 2)
+            
         {
-    
-            labelY = 0;
-    
+            
+            buttonY = 0;
+            
         }
-    
-    else
         
+        else
+            
+        {
+            buttonY = CGRectGetHeight(self.bounds)/2;
+            
+        }
+        
+        
+        if (currentButtonIndex %2 == 0)
+            
+        {
+            buttonX = 0;
+            
+        }
+        
+        else
+            
+        {
+            
+            buttonX = CGRectGetWidth(self.bounds) / 2;
+            
+        }
+        
+        thisButton.frame = CGRectMake(buttonX, buttonY, buttonWidth, buttonHeight);
+    } */
+    
+
+
+
+    
+    for (UILabel *thisLabel in self.labels)
+        
+    {
+        
+        NSUInteger currentLabelIndex = [self.labels indexOfObject:thisLabel];
+        CGFloat labelHeight = CGRectGetHeight (self.bounds) / 2;
+        CGFloat labelWidth = CGRectGetWidth(self.bounds) / 2;
+        CGFloat labelX = 0;
+        CGFloat labelY = 0;
+        
+        if (currentLabelIndex < 2)
+            
+        {
+            
+            labelY = 0;
+            
+        }
+        
+        else
+            
         {
             labelY = CGRectGetHeight(self.bounds)/2;
-    
+            
         }
-
-    
-    if (currentLabelIndex %2 == 0)
         
-    {
-        labelX = 0;
-    
+        
+        if (currentLabelIndex %2 == 0)
+            
+        {
+            labelX = 0;
+            
+        }
+        
+        else
+            
+        {
+            
+            labelX = CGRectGetWidth(self.bounds) / 2;
+            
+        }
+        
+        thisLabel.frame = CGRectMake(labelX, labelY, labelWidth, labelHeight);
+        
     }
     
-    else
-    
-    {
-    
-    labelX = CGRectGetWidth(self.bounds) / 2;
-    
-    }
-    
-    thisLabel.frame = CGRectMake(labelX, labelY, labelWidth, labelHeight);
-
 }
 
-}
+
 
 
 #pragma mark - Touch Handling
 
-- (UILabel *) labelFromTouches: (NSSet *) touches withEvent: (UIEvent *) event
+/* - (UILabel *) labelFromTouches: (NSSet *) touches withEvent: (UIEvent *) event
 
 
 {
@@ -160,17 +310,21 @@ for (UILabel *thisLabel in self.labels)
     UIView *subview = [self hitTest:location withEvent:event];
     return (UILabel *) subview;
 
-}
+} */
 
--(void) tapFired:(UITapGestureRecognizer *) recognizer
+
+
+
+
+ -(void) tapFired: (UITapGestureRecognizer *) recognizer
 
 {
+    
     if (recognizer.state == UIGestureRecognizerStateRecognized)
         
     {
-        CGPoint location = [recognizer locationInView: self];
+        CGPoint location = [recognizer locationInView:self];
         UIView *tappedView = [self hitTest:location withEvent:nil];
-    
         
         if ([self.labels containsObject:tappedView])
             
@@ -180,72 +334,113 @@ for (UILabel *thisLabel in self.labels)
                 
             {
                 
-                
                 [self.delegate floatingToolbar:self didSelectButtonWithTitle:((UILabel *) tappedView).text];
                 
             }
             
             
         }
+        
     }
-
+    
+    
 }
 
+
+-(void) longPressFired: (UILongPressGestureRecognizer *) recognizer
+
+{
+    
+    
+    if (recognizer.state == UIGestureRecognizerStateRecognized)
+        
+    {
+
+        NSMutableArray *colors1 = [NSMutableArray new];
+
+        [colors1 addObject:self.colors[1]];
+        [colors1 addObject:self.colors[2]];
+        [colors1 addObject:self.colors[3]];
+        [colors1 addObject:self.colors[0]];
+        
+        NSMutableArray *labelsArray2 = [[NSMutableArray alloc] init];
+        
+        for (int i=0; i<self.colors.count; i++)
+            
+        {
+            
+            UILabel *newLabel = [UILabel new];
+            newLabel.text = self.currentTitles[i];
+            newLabel.textAlignment = NSTextAlignmentCenter;
+            newLabel.font = [UIFont systemFontOfSize:10];
+            newLabel.backgroundColor = colors1[i];
+            newLabel.textColor = [UIColor whiteColor];
+            [labelsArray2 addObject:newLabel];
+        }
+        
+        self.labels = labelsArray2;
+        
+        for (UILabel *thisLabel in self.labels)
+            
+        {
+            
+            [self addSubview:thisLabel];
+        }
+        
+        
+        self.colors = colors1;
+        
+    }
+    
+    
+}
 
 
 -(void) panFired: (UIPanGestureRecognizer *) recognizer
 
 {
-
-
+    
     if (recognizer.state == UIGestureRecognizerStateChanged)
         
     {
+    
+    
         CGPoint translation = [recognizer translationInView:self];
-        
         NSLog(@"New translation: %@", NSStringFromCGPoint(translation));
         
-        if ([self.delegate respondsToSelector:@selector(floatingToolbar: didTryToPanWithOffset:)])
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPanWithOffset:)])
             
         {
             [self.delegate floatingToolbar:self didTryToPanWithOffset:translation];
         
         }
-        
+    
         [recognizer setTranslation:CGPointZero inView:self];
-    
-    
+        
     }
+    
     
 }
 
 
--(void) pinchFired: (UIPinchGestureRecognizer *) recognizer
+ -(void) pinchFired: (UIPinchGestureRecognizer *) recognizer
 
 
 {
 
     
-    
-    if (recognizer.state == UIGestureRecognizerStateBegan)
-    
-    {
-    
-        recognizer.scale = self.transform.a;
-        CGRect newFrame = self.frame;
-        
-    
-    }
-    
-        
         
     if (recognizer.state == UIGestureRecognizerStateChanged)
     
     {
         
        
-        self.transform = CGAffineTransformScale(self.transform, self.pinchGesture.scale, self.pinchGesture.scale);
-        
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPinchWithScale:)])
+            
+        {
+            [self.delegate floatingToolbar:self didTryToPinchWithScale:recognizer.scale];
+            
+        }
         
         
     }
