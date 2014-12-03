@@ -50,9 +50,9 @@
         
         
         
-        //Make the 4 buttons
+        // Make the 4 buttons
         
-  /* NSMutableArray *buttonsArray = [NSMutableArray new];
+   NSMutableArray *buttonsArray = [NSMutableArray new];
    
    for (NSString *currentTitle in self.currentTitles)
             
@@ -76,7 +76,7 @@
             
         {
             
-            if ([thisButton.titleLabel isEqual:@"Back"] && thisButton.isSelected)
+            if ([thisButton.currentTitle isEqual:@"Back"] && thisButton.isSelected)
             {
                 
                 if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
@@ -90,7 +90,7 @@
             
             
             
-            if ([thisButton.titleLabel isEqual:@"Refresh"] && thisButton.isSelected)
+            if ([thisButton.currentTitle isEqual:@"Refresh"] && thisButton.isSelected)
             {
                 
                 if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
@@ -104,7 +104,7 @@
 
             
             
-            if ([thisButton.titleLabel isEqual:@"Forward"] && thisButton.isSelected)
+            if ([thisButton.currentTitle isEqual:@"Forward"] && thisButton.isSelected)
             {
                 
                 if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
@@ -117,10 +117,13 @@
             }
 
             
-            if ([thisButton.titleLabel isEqual:@"Stop"] && thisButton.isSelected)
+            if ([thisButton.currentTitle isEqual:@"Stop"] && thisButton.isSelected)
             {
                 
-                if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+              
+                
+                
+                 if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
                     
                 {
                     [self.delegate floatingToolbar:self didSelectButtonWithTitle:@"Stop"];
@@ -130,13 +133,13 @@
             }
             
             [self addSubview:thisButton];
-        } */
+        }
         
         
         
         
         
-        //Make the 4 labels
+         // Make the 4 labels
         
          for (NSString *currentTitle in self.currentTitles)
             
@@ -170,11 +173,11 @@
         
                 [self addSubview:thisLabel];
             }
-            cd
+        
             
         
        
-        self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
+       self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapFired:)];
         [self addGestureRecognizer:self.tapGesture];
         
         
@@ -199,8 +202,8 @@
 {
     
     
-/*
- for (UIButton *thisButton in self.buttons)
+
+/* for (UIButton *thisButton in self.buttons)
         
     {
         
