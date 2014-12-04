@@ -44,7 +44,7 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     // [self.activityIndicator startAnimating];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.activityIndicator];
-
+    
     
 }
 
@@ -184,21 +184,21 @@
     NSMutableString *URLString = [tf.text mutableCopy];
     
     
-  //  NSRange chokeRange = [URLString rangeOfString:@" "];
+    //  NSRange chokeRange = [URLString rangeOfString:@" "];
     
-  /*  if (chokeRange.location != NSNotFound)
-        
-    {
-        NSString *modifiedURL = [URLString stringByReplacingOccurrencesOfString:@" " withString: @"+"];
-        NSString *newURL = [@"http://www.google.com/search?q=" stringByAppendingString:modifiedURL];
-        NSString *escapedURL = [newURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSURL *URL = [NSURL URLWithString:escapedURL];
-        NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-        NSLog(@"%@", request);
-        [self.webview loadRequest:request];
-   
-    } */
-
+    /*  if (chokeRange.location != NSNotFound)
+     
+     {
+     NSString *modifiedURL = [URLString stringByReplacingOccurrencesOfString:@" " withString: @"+"];
+     NSString *newURL = [@"http://www.google.com/search?q=" stringByAppendingString:modifiedURL];
+     NSString *escapedURL = [newURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+     NSURL *URL = [NSURL URLWithString:escapedURL];
+     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+     NSLog(@"%@", request);
+     [self.webview loadRequest:request];
+     
+     } */
+    
     NSString *modifiedURL = [URLString stringByReplacingOccurrencesOfString:@" " withString: @"+"];
     NSString *newURL = [@"http://www.google.com/search?q=" stringByAppendingString:modifiedURL];
     NSString *escapedURL = [newURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -377,8 +377,8 @@
     }
     
 }
-    
-    
+
+
 
 -(void) floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(CGFloat) scale
 
@@ -386,7 +386,7 @@
     
     
     CGRect potentialNewFrame = CGRectMake(toolbar.frame.origin.x, toolbar.frame.origin.y,toolbar.frame.size.width * scale, toolbar.frame.size.height * scale);
-
+    
     if (CGRectContainsRect(self.view.bounds, potentialNewFrame))
     {
         toolbar.frame = potentialNewFrame;
