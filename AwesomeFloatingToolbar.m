@@ -67,6 +67,12 @@
             
             [button setTitle:titleForThisButton forState:UIControlStateNormal];
              button.backgroundColor = colorForThisButton;
+            
+            
+            [button addTarget:self action:@selector(tapFired:) forControlEvents:UIControlEventTouchUpInside];
+            
+        
+            
             [buttonsArray addObject:button];
             
         }
@@ -333,7 +339,6 @@
  -(void) tapFired: (UIButton *) button
 
 {
-    
     
     
         if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
