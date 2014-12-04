@@ -46,7 +46,7 @@
                         [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]];
         
     
-        NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
+        // NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
         
         
         
@@ -72,7 +72,16 @@
         }
         
         self.buttons = buttonsArray;
+        
         for (UIButton *thisButton in self.buttons)
+            
+        {
+        
+        [self addSubview:thisButton];
+        
+        }
+        
+    /*    for (UIButton *thisButton in self.buttons)
             
         {
             
@@ -132,7 +141,7 @@
                 
             }
             
-            [self addSubview:thisButton];
+            [self addSubview:thisButton]; */
         }
         
         
@@ -141,7 +150,7 @@
         
          // Make the 4 labels
         
-         for (NSString *currentTitle in self.currentTitles)
+   /*      for (NSString *currentTitle in self.currentTitles)
             
         {
         
@@ -190,7 +199,7 @@
         self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressFired:)];
         [self addGestureRecognizer:self.longPressGesture];
         
-        }
+        } */
     
     return self;
     
@@ -202,8 +211,8 @@
 {
     
     
-
-/* for (UIButton *thisButton in self.buttons)
+    
+    for (UIButton *thisButton in self.buttons)
         
     {
         
@@ -245,13 +254,15 @@
         }
         
         thisButton.frame = CGRectMake(buttonX, buttonY, buttonWidth, buttonHeight);
-    } */
+    }
+    
+}
+
+    
     
 
-
-
     
-    for (UILabel *thisLabel in self.labels)
+/*    for (UILabel *thisLabel in self.labels)
         
     {
         
@@ -296,7 +307,7 @@
         
     }
     
-}
+} */
 
 
 
@@ -319,11 +330,25 @@
 
 
 
- -(void) tapFired: (UITapGestureRecognizer *) recognizer
+ -(void) tapFired: (UIButton *) button
 
 {
     
-    if (recognizer.state == UIGestureRecognizerStateRecognized)
+    
+    
+        if ([self.delegate respondsToSelector:@selector(floatingToolbar:didSelectButtonWithTitle:)])
+            
+        {
+            
+            [self.delegate floatingToolbar:self didSelectButtonWithTitle:button.currentTitle];
+            
+        }
+        
+    
+    
+    
+    
+    /*  if (recognizer.state == UIGestureRecognizerStateRecognized)
         
     {
         CGPoint location = [recognizer locationInView:self];
@@ -344,7 +369,7 @@
             
         }
         
-    }
+    }*/
     
     
 }
